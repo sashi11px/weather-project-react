@@ -1,38 +1,112 @@
-.App {
-  text-align: center;
+body {
+  background-image: url("https://s3.amazonaws.com/shecodesio-production/uploads/files/000/057/405/original/weatherbg.jpeg?1670604181");
+}
+#temperature {
+  font-size: 45px;
+}
+.btn-primary {
+  margin-right: 60px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+a {
+  text-decoration: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+input {
+  background: white;
+  color: black;
+  border-radius: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.button {
+  color: black;
 }
 
-.App-link {
-  color: #61dafb;
+.city {
+  color: #000000;
+  margin-left: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.icon {
+  size: 200px;
+}
+
+.temp {
+  font-weight: 400;
+  font-size: 65px;
+  color: #000000;
+  margin-left: 80px;
+  margin-top: -100px;
+}
+
+.row-2 {
+  color: #000000;
+  font-size: 20px;
+  margin-top: 20px;
+  margin-left: 0px;
+}
+
+h1 {
+  color: #000000;
+}
+p {
+  font-size: 20px;
+  color: #000000;
+}
+.speed {
+  font-size: 15px;
+}
+.humidity {
+  font-size: 15px;
+}
+
+h3 {
+  font-size: 25px;
+}
+h6 {
+  text-transform: capitalize;
+}
+
+.strong {
+  font-size: 65px;
+}
+
+.units .active {
+  color: #000000;
+  cursor: default;
+  text-decoration: none;
+}
+
+.units {
+  position: absolute;
+  margin: 21px;
+  margin-left: auto;
+}
+
+.units .active:hover {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+  color: black;
+  font-size: 15px;
+  height: 18px;
+  line-height: 19px;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+.weather-forecast-date {
+  opacity: 0.4;
+  padding-left: 20px;
+}
+
+.weather-forecast-temperature-min {
+  opacity: 0.5;
+}
+
+.weather-forecast-temperatures {
+  font-size: 13px;
+  padding-left: 11px;
 }
