@@ -3,6 +3,20 @@ import "./Weather.css";
 export default function Weather() {
   return (
     <div className="Weather">
+      <form>
+        <div className="row">
+          <div className="col-9">
+            <input
+              type="search"
+              placeholder="Enter a City"
+              className="form-control"
+            />
+          </div>
+          <div className="col-3">
+            <input type="submit" value="Search" className="btn btn-primary" />
+          </div>
+        </div>
+      </form>
       <h1>Paros</h1>
       <ul>
         <li>Tuesday 5:00</li>
@@ -25,7 +39,6 @@ export default function Weather() {
           </ul>
         </div>
       </div>
-      Hello
     </div>
   );
 }
