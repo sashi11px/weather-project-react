@@ -1,52 +1,156 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
+import "./styles.css";
 export default function SearchEngine() {
-  let [city, setCity] = useState("");
-  let [temperature, setTemp] = useState("");
-  let [description, setDescription] = useState("");
-  let [humidity, setHumidity] = useState("");
-  let [wind, setWind] = useState("");
-  let [icon, setIcon] = useState("");
+  let now = new Date();
 
-  function showWeather(response) {
-    setTemp(response.data.main.temp);
-    setDescription(response.data.weather[0].description);
-    setHumidity(Math.round(response.data.main.humidity));
-    setWind(response.data.wind.speed);
-    setIcon(
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = days[now.getDay()];
+
+  let months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let month = months[now.getMonth()];
+  let dates = now.getDate();
+  let year = now.getFullYear();
+  let hours = now.getHours() % 12 || 12;
+  let minutes = now.getMinutes();
+  let h3 = document.querySelector("h3");
+  h3.innerHTML = `${day}, ${month} ${dates}, ${year} ${hours}:${minutes}`;
+
+  function formatDay(timestamp) {
+    let date = new Date(timestamp * 1000);
+    let day = date.getDay();
+    let days = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+
+    return days[day];
+  }
+
+  function newCity(event) {
+    event.preventDefault();
+    let searchInput = document.querySelector("#search-text");
+    let maincity = document.querySelector("#maincity");
+
+    maincity.innerHTML = `${searchInput.value}`;
+
+    search(searchInput.value);
+  }
+
+  function search(city) {
+    let apiKey = `5aac6d0188c6f17d6d2bbe6591b6fef0`;
+    let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(currentWeather);
+  }
+
+  let searchCity = document.querySelector("form");
+  searchCity.addEventListener("submit", newCity);
+
+  function displayForecast(response) {
+    let forecast = response.data.daily;
+    let forecastElement = document.querySelector("#forecast");
+
+    let forecastHTML = `<div class="row">`;
+    forecast.forEach(function (forecastDay, index) {
+      if (index < 6)
+        forecastHTML =
+          forecastHTML +
+          `
+              <div class="col-2">
+                <div class="weather-forecast-date">${formatDay(
+                  forecastDay.dt
+                )}</div>
+                <img
+                  src="http://openweathermap.org/img/wn/${
+                    forecastDay.weather[0].icon
+                  }@2x.png"
+                  alt=""
+                  width="42"
+                />
+                <div class="weather-forecast-temperatures">
+                  <span class="weather-forecast-temperature-max"> ${Math.round(
+                    forecastDay.temp.max
+                  )}° </span>
+                  <span class="weather-forecast-temperature-min"> ${Math.round(
+                    forecastDay.temp.min
+                  )}° </span>
+                </div>
+              </div>
+            
+            `;
+    });
+
+    forecastHTML = forecastHTML + `</div>`;
+    forecastElement.innerHTML = forecastHTML;
+  }
+
+  function getForecast(coordinates) {
+    let apiKey = "5aac6d0188c6f17d6d2bbe6591b6fef0";
+    let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+    axios.get(apiUrl).then(displayForecast);
+  }
+
+  function currentWeather(response) {
+    let maintemp = document.querySelector("#temperature");
+    let maincity = document.querySelector("#maincity");
+    let humidityElement = document.querySelector("#humidity");
+    let windElement = document.querySelector("#speed");
+    let descriptionElement = document.querySelector("#description");
+    let iconElement = document.querySelector("#icon");
+
+    celsiusTemperature = response.data.main.temp;
+
+    maintemp.innerHTML = `${Math.round(celsiusTemperature)}`;
+    maincity.innerHTML = response.data.name;
+    descriptionElement.innerHTML = response.data.weather[0].description;
+    humidityElement.innerHTML = response.data.main.humidity;
+    windElement.innerHTML = Math.round(response.data.wind.speed);
+    iconElement.setAttribute(
+      "src",
       `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
     );
-  }
-  function handleSubmit(event) {
-    event.preventDefault();
-    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=04bde8cc7f569f7c5603cdbc6deb89a3&units=metric`;
-    axios.get(url).then(showWeather);
-  }
-  function updateCity(event) {
-    setCity(event.target.value);
+
+    getForecast(response.data.coord);
   }
 
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="search"
-          placeholder="Enter City Here"
-          onChange={updateCity}
-        />
-        <input type="submit" value="Search" />
-      </form>
-      <h1> {city} </h1>
-      <ul className="parameters">
-        <li>Temperature: {temperature}°C</li>
-        <li>Description: {description}</li>
-        <li>Humidity: {humidity}%</li>
-        <li>Wind: {wind}km/h</li>
-        <li>
-          {" "}
-          <img src={icon} alt={description} />
-        </li>
-      </ul>
-    </div>
-  );
+  function displayFahrenheitTemperature(event) {
+    event.preventDefault();
+    let fahrenheitTemperature = (celsiusTemperature * 9) / 5 + 32;
+    let temperatureElement = document.querySelector("#temperature");
+    temperatureElement.innerHTML = Math.round(fahrenheitTemperature);
+  }
+
+  function displayCelsiusTemperature(event) {
+    event.preventDefault();
+    let temperatureElement = document.querySelector("#temperature");
+    temperatureElement.innerHTML = Math.round(celsiusTemperature);
+  }
+
+  let celsiusTemperature = null;
+
+  let fahrenheitLink = document.querySelector("#fahrenheit-link");
+  fahrenheitLink.addEventListener("click", displayFahrenheitTemperature);
+
+  let celsiusLink = document.querySelector("#celsius-link");
+  celsiusLink.addEventListener("click", displayCelsiusTemperature);
+
+  search("Paros, Greece");
 }
